@@ -76,6 +76,66 @@ public class PathFinding : MonoBehaviour
 
     }
 
+    public List<GridNode> GetAvaibleNodes(GridNode initialNode, int radius, Team team)
+    {
+        List<GridNode> avaliableNodes = new List<GridNode>();
+        int distance = (radius - 1) * 10;
+
+        Heap<GridNode> openSet = new Heap<GridNode>(grid.MaxSize);
+        initialNode.gCost = 0;
+        initialNode.parent = initialNode;
+        openSet.Add(initialNode);
+
+        while(openSet.Count > 0)
+        {
+            GridNode currentNode = openSet.RemoveFirst();
+            avaliableNodes.Add(currentNode);
+
+            foreach(GridNode neighbor in grid.GetNeighbours(currentNode))
+            {
+                if (!neighbor.walkable || avaliableNodes.Contains(neighbor))
+                    continue;
+
+                if(currentNode.isOccupied != null && currentNode != initialNode)
+                {
+                    if(currentNode.isOccupied.tag != "Unit")
+                    {
+                        if (team.flagPosition.worldPosition == currentNode.worldPosition)
+                        {
+                            continue;
+                        }
+                            
+                    }
+                    else
+                    {
+                        Unit unit = (Unit)currentNode.isOccupied;
+                        if (unit.unitTeam == team)
+                            continue;
+                    }
+                }
+
+                int nodeCost = currentNode.gCost + GetDistance(currentNode, neighbor);
+                if(nodeCost < distance && (nodeCost < neighbor.gCost || !openSet.Contains(neighbor)))
+                {
+                    neighbor.gCost = nodeCost;
+                    neighbor.parent = currentNode;
+
+                    if (!openSet.Contains(neighbor))
+                        openSet.Add(neighbor);
+                    else
+                        openSet.UpdateItem(neighbor);
+                }
+            }
+        }
+
+        return avaliableNodes;
+    }
+
+    public GridNode GetNodeFromWorldPosition(Vector3 worldPos)
+    {
+        return grid.NodeFromWorldPoint(worldPos);
+    }
+
     Vector3[] RetracePath(GridNode startNode, GridNode endNode)
     {
         List<GridNode> path = new List<GridNode>();
@@ -115,7 +175,7 @@ public class PathFinding : MonoBehaviour
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
 
         if (dstX > dstY)
-            return 14 * dstY + 10 * (dstX - dstY); // 14 = al pes de distancia en diagonal, 10 = al pes de menejarse horizontal o vertical
-        return 14 * dstX + 10 * (dstY - dstX);
+            return 20 * dstY + 10 * (dstX - dstY); // 14 = al pes de distancia en diagonal, 10 = al pes de menejarse horizontal o vertical
+        return 20 * dstX + 10 * (dstY - dstX);
     }
 }

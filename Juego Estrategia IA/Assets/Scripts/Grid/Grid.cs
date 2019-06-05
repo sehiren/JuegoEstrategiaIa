@@ -17,17 +17,22 @@ public class Grid : MonoBehaviour
     public int obstacleProximityPenalty = 10;
     Dictionary<int, int> walkableRegionsDictionary = new Dictionary<int, int>();
     LayerMask walkableMask;
-
+    private LayerMask playableItemsMask;
     private GridNode[,] grid;
 
     private float nodeDiameter;
     private int gridSizeX, gridSizeY;
-    
+    public int GridSizeX => gridSizeX;
+    public int GridSizeY => gridSizeY;
+
 
     int penaltyMin = int.MaxValue;
     int penaltyMax = int.MinValue;
 
+    private DrawGrid gridDrawing;
+    private GridNode selectedNode;
 
+    private Vector3 mousePos;
 
     private void Awake()
     {
@@ -41,6 +46,12 @@ public class Grid : MonoBehaviour
             walkableRegionsDictionary.Add((int)Mathf.Log(region.terrainMask.value, 2), region.terrainPenalty);
 
         }
+
+        gridDrawing = GetComponent<DrawGrid>();
+        gridDrawing.CreateGrid(this, gridSizeX, gridSizeY);
+
+        playableItemsMask = LayerMask.GetMask("PlayableItem");
+
         CreateGrid();
     }
 
@@ -65,6 +76,8 @@ public class Grid : MonoBehaviour
             {
                 Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
                 bool walkable = !(Physics.CheckSphere(worldPoint, nodeRadius, unwalkableMask)); //checks if the point collides with the unwakable mask, true if it does
+                
+
 
                 int movementPenalty = 0;
 
@@ -81,6 +94,15 @@ public class Grid : MonoBehaviour
                 }
 
                 grid[x, y] = new GridNode(walkable, worldPoint, x, y, movementPenalty); //adds the currrent point to the grid
+
+                Collider[] items = Physics.OverlapSphere(worldPoint, nodeRadius, playableItemsMask);
+
+                if (items.Length > 0)
+                {
+                    TeamItem item = items[0].GetComponent<TeamItem>();
+                    item.currentNode = grid[x, y];
+                    grid[x, y].isOccupied = item;
+                }
             }
         }
 
@@ -89,8 +111,8 @@ public class Grid : MonoBehaviour
 
     public GridNode NodeFromWorldPoint(Vector3 worldPosition)//used to find the node for a specific position in the world, like the node where the player is
     {
-        float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
-        float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
+        float percentX = (Mathf.Round(worldPosition.x) + gridWorldSize.x / 2) / gridWorldSize.x;
+        float percentY = (Mathf.Round(worldPosition.z) + gridWorldSize.y / 2) / gridWorldSize.y;
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
@@ -99,7 +121,6 @@ public class Grid : MonoBehaviour
 
         return grid[x, y];
     }
-
 
     void BlurPenaltyMap(int blurSize)
     {
@@ -193,7 +214,8 @@ public class Grid : MonoBehaviour
 
                 Gizmos.color = Color.Lerp(Color.white, Color.black, Mathf.InverseLerp(penaltyMin, penaltyMax, n.movementPenalty));
                 Gizmos.color = (n.walkable) ? Gizmos.color : Color.red;
-                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter));
+                Gizmos.color = Gizmos.color - new Color(0, 0, 0, .7f);
+                Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter) - Vector3.up * 0.9f);
             }
         }
     }

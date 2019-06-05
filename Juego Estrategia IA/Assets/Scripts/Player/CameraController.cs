@@ -7,8 +7,7 @@ public class CameraController : MonoBehaviour
     [Header("Camera movement properties")]
     [Tooltip("Camera movement speed when following the mouse")]
     [SerializeField] private float _panSpeed = 10f;
-    [Tooltip("Mouse offset in the X/Z axis to move the camera")]
-    [SerializeField] private Vector2 _minMouseOffset = new Vector2(10, 10);
+    private float _distanceMouseOffset;
     [Tooltip("Camera zoom in/out speed when scrolling")]
     [SerializeField] private float _zoomSpeed = 2f;
 
@@ -22,11 +21,13 @@ public class CameraController : MonoBehaviour
     private float screenCenterX;
     private float screenCenterY;
 
+    private bool _movingToTarget;
+    private Vector3 targetPosition;
+
     public bool showGizmos = false;
 
     //-----------------------Getters and Setters---------------------------------
     public float panSpeed { get { return _panSpeed; } }
-    public Vector2 mouseMinOffset { get { return _minMouseOffset; } }
     //---------------------------------------------------------------------------
 
 
@@ -35,26 +36,36 @@ public class CameraController : MonoBehaviour
     {
         screenCenterX = Screen.width / 2;
         screenCenterY = Screen.height / 2;
+
+        _distanceMouseOffset = Mathf.Min(screenCenterY, screenCenterX);
+        _distanceMouseOffset = _distanceMouseOffset - _distanceMouseOffset / 8;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
-        float mouseOffsetX = Input.mousePosition.x - screenCenterX;
-        float mouseOffsetY = Input.mousePosition.y - screenCenterY;
-
-        //Check if the has moved outside the 
-        if (Mathf.Abs(mouseOffsetX) > mouseMinOffset.x ||
-                Mathf.Abs(mouseOffsetY) > mouseMinOffset.y)
+        if(!_movingToTarget)
         {
-            //Move  the camera the distance we want
-            Move(mouseOffsetX, mouseOffsetY);
-        }
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.mouseScrollDelta != Vector2.zero)
-            ZoomCamera(Input.mouseScrollDelta.y);
+            float mouseOffsetX = Input.mousePosition.x - screenCenterX;
+            float mouseOffsetY = Input.mousePosition.y - screenCenterY;
+
+            Vector2 screenCenter = new Vector2(screenCenterX, screenCenterY);
+            //Check if the has moved outside the 
+            if (Vector2.Distance(screenCenter, Input.mousePosition) >= _distanceMouseOffset)
+            {
+                //Move  the camera the distance we want
+                Move(mouseOffsetX, mouseOffsetY);
+            }
+
+            if (Input.mouseScrollDelta != Vector2.zero)
+                ZoomCamera(Input.mouseScrollDelta.y);
+        }
+        else
+        {
+            MoveToTarget();
+        }
     }
 
     private void Move(float mouseOffsetX, float mouseOffsetY)
@@ -81,6 +92,23 @@ public class CameraController : MonoBehaviour
         }
 
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime);
+    }
+
+    private void MoveToTarget()
+    {
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * panSpeed);
+        if(Vector3.Distance(transform.position, targetPosition) <= 0.1f)
+        {
+            _movingToTarget = false;
+        }
+    }
+
+    public void SetCameraPosition(Vector3 worldPos)
+    {
+        worldPos.y = transform.position.y;
+
+        _movingToTarget = true;
+        targetPosition = worldPos;
     }
 
     private void ZoomCamera(float zoomOffset)

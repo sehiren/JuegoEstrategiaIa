@@ -13,6 +13,7 @@ public class GridNode : IHeapItem<GridNode>
     public int gCost; //el peso de este nodo hasta el nodo inicial
     public int hCost; //el peso para llegar hasta el nodo final, el objetivo
     public GridNode parent; //the node that comes before this one in the pathfinding method
+    public TeamItem isOccupied = null;
     int heapIndex;
 
     public GridNode(bool _walkable, Vector3 _worldPos, int _gridX, int _gridY, int _penalty)
@@ -57,3 +58,4 @@ public class GridNode : IHeapItem<GridNode>
         return -compare; throw new System.NotImplementedException();
     }
 }
+

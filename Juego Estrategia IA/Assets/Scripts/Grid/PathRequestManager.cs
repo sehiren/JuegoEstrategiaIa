@@ -42,6 +42,16 @@ public class PathRequestManager : MonoBehaviour
     }
 
 
+    public static List<GridNode> RequestAvaibleNodes(GridNode initialNode, int radius, Team team)
+    {
+        return instance.pathfinding.GetAvaibleNodes(initialNode, radius, team);
+    }
+
+    public static GridNode RequestNodeFromWorldPosition(Vector3 worldPos)
+    {
+        return instance.pathfinding.GetNodeFromWorldPosition(worldPos);
+    }
+
     public void FinishedProcessingPath(PathResult result)//is called by the PathFinding class
     {
         lock (results)
