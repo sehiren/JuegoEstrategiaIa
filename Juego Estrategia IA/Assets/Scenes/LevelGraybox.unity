@@ -11905,6 +11905,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lower UpgradeArea
       objectReference: {fileID: 0}
+    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
+      propertyPath: settingClass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8636111151826794045, guid: 1eae21c95ced5494794fbcc4a90b48e3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11964,10 +11968,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
-      propertyPath: settingClass
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 447920790, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
       propertyPath: m_LocalRotation.x
@@ -12123,6 +12123,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Middle upgradeArea
       objectReference: {fileID: 0}
+    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
+      propertyPath: settingClass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8636111151826794045, guid: 1eae21c95ced5494794fbcc4a90b48e3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -12183,10 +12187,6 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
-      propertyPath: settingClass
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 447920790, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
       propertyPath: m_LocalRotation.x
       value: -0.5
@@ -12241,6 +12241,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 715998672}
+  - component: {fileID: 715998673}
   m_Layer: 0
   m_Name: '------------- Game Managers -------------'
   m_TagString: Untagged
@@ -12266,6 +12267,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &715998673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 715998671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52dfd248e68d71b48b094fb13614ebcc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  node: {fileID: 0}
 --- !u!1001 &718662788
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13335,6 +13349,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Upper UpgradeArea
       objectReference: {fileID: 0}
+    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
+      propertyPath: settingClass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8636111151826794045, guid: 1eae21c95ced5494794fbcc4a90b48e3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -13394,10 +13412,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
-      propertyPath: settingClass
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 447920789, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
       propertyPath: m_Sprite
@@ -14112,6 +14126,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Right UpgradeArea
       objectReference: {fileID: 0}
+    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
+      propertyPath: settingClass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8636111151826794045, guid: 1eae21c95ced5494794fbcc4a90b48e3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14171,10 +14189,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
-      propertyPath: settingClass
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 447920790, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
       propertyPath: m_LocalRotation.x
@@ -15760,11 +15774,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: c8c6e64c10ec6e84d8d6b38bcccc103f,
+        type: 3}
     - target: {fileID: 9182532056259111273, guid: c2427d8845739a24b8eb7b979209c5df,
         type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2427d8845739a24b8eb7b979209c5df, type: 3}
@@ -20254,11 +20269,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: 43ac21524b5e1b345a5d52acb91ff22c,
+        type: 3}
     - target: {fileID: 9182532056259111273, guid: c2427d8845739a24b8eb7b979209c5df,
         type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2427d8845739a24b8eb7b979209c5df, type: 3}
@@ -32164,6 +32180,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Left UpgradeArea
       objectReference: {fileID: 0}
+    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
+      propertyPath: settingClass
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8636111151826794045, guid: 1eae21c95ced5494794fbcc4a90b48e3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -32223,10 +32243,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1358358835, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
-      propertyPath: settingClass
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 447920789, guid: 1eae21c95ced5494794fbcc4a90b48e3, type: 3}
       propertyPath: m_Sprite
