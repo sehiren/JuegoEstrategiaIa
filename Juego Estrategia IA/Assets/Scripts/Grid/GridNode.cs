@@ -9,7 +9,7 @@ public class GridNode : IHeapItem<GridNode>
     public int gridX;
     public int gridY;
     public int movementPenalty;
-
+ 
     public int gCost; //el peso de este nodo hasta el nodo inicial
     public int hCost; //el peso para llegar hasta el nodo final, el objetivo
     public GridNode parent; //the node that comes before this one in the pathfinding method

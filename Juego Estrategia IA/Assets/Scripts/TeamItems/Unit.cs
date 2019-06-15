@@ -5,6 +5,7 @@ using UnityEngine;
 public class Unit : TeamItem
 {
     [SerializeField] private UnitClass _unitClass;
+    [SerializeField] private StrategicRole _role;
     private Team _unitTeam;
     [SerializeField] private int _unitLevel = 1;
     [SerializeField] private int _initialMoveDistance = 5;
@@ -16,6 +17,7 @@ public class Unit : TeamItem
 
     public Team unitTeam { get { return _unitTeam; } }
     public int unitLevel { get { return _unitLevel; } set { _unitLevel = value; } }
+    public StrategicRole role { get { return _role; } set { _role = value; } }
     public int moveDistance { get { return _initialMoveDistance - (_unitLevel - 1); } }
     public bool isAvailable { get { return _isAvailable; } }
     public UnitClass unitClass{get { return _unitClass; } }
@@ -47,7 +49,6 @@ public class Unit : TeamItem
     /// <param name="enemy">Unidad contra la que  se va a combatir</param>
     public void FightUnit(Unit enemy)
     {
-
         //Calcular fuerzas de combate  de las unidades
         float thisUnitPower = this.GetUnitPower(enemy);
         float enemyPower = enemy.GetUnitPower(this);
@@ -89,6 +90,7 @@ public class Unit : TeamItem
     {
         _unitTeam.KillUnit(this);
         Destroy(this.gameObject);
+        if(_unitTeam.teamId != 0) _unitTeam.RoleChanges();
     }
 
     /// <summary>
@@ -132,12 +134,31 @@ public class Unit : TeamItem
         return unitPower;
     }
 
+    /// <summary>
+    /// Devuelve la casilla de la grid donde se encuentra la unidad 
+    /// </summary>
+    /// <param name="cameraRayChip">Rayo que saldrá de la camara en la posición de la unidad</param>
+    /// <returns></returns>
+    public GridNode GetGridNode()
+    {
+        return PathRequestManager.RequestNodeFromWorldPosition(this.transform.position);
+    }
+
+    /// <summary>
+    /// Indica si es del mismo equipo que otra unidad
+    /// </summary>
+    /// <param name="unitTeam">Equipo al que pertenece la unidad</param>
+    public bool SameTeam(Unit other)
+    {
+        return unitTeam == other.unitTeam;
+    }
+
     //Actualizar unidad cuando se cambia algo en el editor
     private void OnValidate()
     {
         if (_classSprite == null)
             _classSprite = GetComponentInChildren<SpriteRenderer>();
-
+        
         switch (_unitClass)
         {
             case UnitClass.Sword:
@@ -146,11 +167,8 @@ public class Unit : TeamItem
             case UnitClass.Shield:
                 _classSprite.sprite = LevelController.ShieldSprite;
                 break;
-            case UnitClass.Lance:
+            default: 
                 _classSprite.sprite = LevelController.LanceSprite;
-                break;
-            default:
-                _classSprite.sprite = null;
                 break;
         }
     }
@@ -159,6 +177,11 @@ public class Unit : TeamItem
 public enum UnitClass
 {
     Sword = 1, Shield = 2, Lance = 3, Neutral = 0
+}
+
+public enum StrategicRole
+{
+    Forward, Defense, Center
 }
 
 

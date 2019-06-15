@@ -147,15 +147,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 47c3e4f0dcc2dc241b8a70f4fc855339, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1370360995
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 1358358835}
   m_Layer: 0
   m_Name: UpgradeArea
-  m_TagString: Untagged
+  m_TagString: Boost
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -314,7 +314,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8636111151826794047}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 1.5
@@ -334,7 +334,7 @@ MonoBehaviour:
   swordClassSprite: {fileID: 21300000, guid: 43ac21524b5e1b345a5d52acb91ff22c, type: 3}
   shieldClassSprite: {fileID: 21300000, guid: 47c3e4f0dcc2dc241b8a70f4fc855339, type: 3}
   lanceClassSprite: {fileID: 21300000, guid: c8c6e64c10ec6e84d8d6b38bcccc103f, type: 3}
-  settingClass: 0
+  settingClass: 2
   _isAvaiable: 0
 --- !u!1 &8636111152460458674
 GameObject:

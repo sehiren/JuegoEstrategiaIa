@@ -74,7 +74,6 @@ public struct PathResult
         this.success = succes;
         this.callback = callback;
     }
-
 }
 
 public struct PathRequest

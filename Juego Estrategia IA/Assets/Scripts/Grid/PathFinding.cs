@@ -6,7 +6,6 @@ using System;
 
 public class PathFinding : MonoBehaviour
 {
-
     Grid grid;
 
     void Awake()
@@ -74,6 +73,118 @@ public class PathFinding : MonoBehaviour
         }
         callback(new PathResult(waypoints, pathSuccess, request.callback));
 
+    }
+
+    public int BestPathLength(GridNode startNode, GridNode targetNode)//Is now a corutine
+    {
+        Vector3[] waypoints = new Vector3[0];
+        bool pathSuccess = false;
+        int res = int.MaxValue;
+
+        startNode.parent = startNode;
+
+        if (startNode.walkable && targetNode.walkable)
+        {
+            Heap<GridNode> openSet = new Heap<GridNode>(grid.MaxSize);
+            HashSet<GridNode> closedSet = new HashSet<GridNode>();
+            openSet.Add(startNode); //the star position, normally the one where the player is
+
+            while (openSet.Count > 0)
+            {
+                GridNode currentnode = openSet.RemoveFirst();
+                closedSet.Add(currentnode);
+
+                if (currentnode == targetNode)
+                {
+                    pathSuccess = true;
+                    break;
+                }
+
+                foreach (GridNode neighbour in grid.GetNeighbours(currentnode))
+                {
+                    if (!neighbour.walkable || closedSet.Contains(neighbour))//if neighbour is not traversable or if it is in CLOSED
+                    {
+                        continue;//skip to the next 
+                    }
+
+                    int newMovementCostToNeighbour = currentnode.gCost + GetDistance(currentnode, neighbour) + neighbour.movementPenalty;
+                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) //if it comes up that the new calculation is lesser than the one done before, we change the value to show this (we are acceding this node from a shorter path, and this is now the currently optimal for the neighboar node -> we update it)
+                    {
+                        neighbour.gCost = newMovementCostToNeighbour;
+                        neighbour.hCost = GetDistance(neighbour, targetNode);
+                        neighbour.parent = currentnode;
+
+                        if (!openSet.Contains(neighbour))//now we have to recalculate this node, even if we alredy did, because the weight has chan+ged
+                            openSet.Add(neighbour);
+
+                        else
+                        {
+                            openSet.UpdateItem(neighbour);
+                        }
+                    }
+                }
+            }
+            res = closedSet.Count;
+        }
+
+        if (pathSuccess) return res;
+        else return int.MaxValue;
+    }
+
+    public GridNode GetOptimalFurtherNode(List<GridNode> nodes, List<GridNode> menances, GridNode objective)
+    {
+        int maxDis = 0;
+        int minDis = int.MaxValue;
+        GridNode best = null;
+        List<GridNode> furtherNodes = new List<GridNode>();
+
+        foreach(GridNode g in nodes) // Guardar los nodos más alejados de la amenaza
+        {
+            Unit u = (Unit)g.isOccupied;
+            bool leap = false;
+
+            if (u != null)
+            {
+                if (u.tag == "Flag") leap = true; // si es bandera salta al siguiente nodo
+                if (u.tag == "Unit")
+                    if (!u.SameTeam((Unit)menances[0].isOccupied)) leap = true;  // si es aliado salta al siguiente nodo
+            }
+
+            if (!leap)
+            {
+                int dis = 0;
+
+                foreach (GridNode menance in menances)
+                {
+                    dis += BestPathLength(g, menance);
+                }
+
+                if (dis > maxDis)
+                {
+                    maxDis = dis;
+                    if (furtherNodes.Count != 0) furtherNodes.RemoveRange(0, furtherNodes.Count);
+                    furtherNodes.Add(g);
+                }
+                else if (dis == maxDis) furtherNodes.Add(g);
+            }
+        }            
+
+        // de los nodos más alejados de la amenaza, seleccionar el más cercano al objetivo
+        if (furtherNodes.Count > 1)
+        {
+            foreach (GridNode g in furtherNodes)
+            {
+                int dis = BestPathLength(g, objective);
+                if (dis < minDis)
+                {
+                    minDis = dis;
+                    best = g;
+                }
+            }
+        }
+        else best = furtherNodes[0];
+
+        return best;
     }
 
     public List<GridNode> GetAvaibleNodes(GridNode initialNode, int radius, Team team)
@@ -169,7 +280,7 @@ public class PathFinding : MonoBehaviour
         return waypoints.ToArray();
     }
 
-    int GetDistance(GridNode nodeA, GridNode nodeB)//get the distance between two given nodes
+    public int GetDistance(GridNode nodeA, GridNode nodeB)//get the distance between two given nodes
     {
         int dstX = Mathf.Abs(nodeA.gridX - nodeB.gridX);
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);

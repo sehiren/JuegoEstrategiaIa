@@ -9,10 +9,10 @@ public class UpgradeArea : MonoBehaviour
     public Sprite lanceClassSprite;
 
     public UnitClass settingClass;
+    public UnitClass currentClass;
 
     private Orb areaOrb;
-    private UnitClass currentClass;
-
+    
     [SerializeField]private bool _isAvaiable;
     public bool isAvaible { get { return _isAvaiable; } }
 
@@ -49,6 +49,12 @@ public class UpgradeArea : MonoBehaviour
         }
 
         currentClass = unitClass;
+    }
+
+    // Devuelve el nodo donde se encuentra el boost area
+    public GridNode GetGridNode()
+    {
+        return PathRequestManager.RequestNodeFromWorldPosition(this.transform.position);
     }
 
     private void OnTriggerEnter(Collider other)

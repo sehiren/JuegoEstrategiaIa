@@ -38,8 +38,7 @@ public class Team : MonoBehaviour
         _teamColor = tSet.teamColor;
 
         //init units
-        foreach (Unit u in units)
-            u.InitUnit(this);
+        foreach (Unit u in units) u.InitUnit(this);
     }
 
     /// <summary>
@@ -73,6 +72,90 @@ public class Team : MonoBehaviour
         {
             u.EnableUnit(isEnabled);
         }
+    }
+
+    /// <summary>
+    /// Cuenta las unidades y roles para barajar cambios
+    /// </summary>
+    public void RoleChanges()
+    {
+        int n = _currentUnits.Count;
+        int atk = 0;
+        int def = 0;
+        int med = 0;
+        foreach (Unit u in _currentUnits)
+        {
+            switch (u.role)
+            {
+                case StrategicRole.Forward:
+                    atk++;
+                    break;
+                case StrategicRole.Defense:
+                    def++;
+                    break;
+                default:
+                    med++;
+                    break;
+            }
+        }
+        if(med > 0)
+        {
+            if (atk < 6) AssignNewRole(StrategicRole.Center, StrategicRole.Forward);
+            if (def < 6) AssignNewRole(StrategicRole.Center, StrategicRole.Defense);
+        }
+    }
+
+    private void AssignNewRole(StrategicRole prevRole, StrategicRole newRole)
+    {
+        List<Unit> prevRoleUnits = new List<Unit>();
+        List<Unit> newRoleUnits = new List<Unit>();
+
+        foreach (Unit u in _currentUnits)
+        {
+            if (u.role == prevRole) prevRoleUnits.Add(u);
+            else if (u.role == newRole) newRoleUnits.Add(u);
+        }
+
+        int sword = 0;
+        int shield = 0;
+        int lance = 0;
+        UnitClass newUnit = UnitClass.Sword;
+
+        foreach (Unit u in newRoleUnits)
+        {
+            switch (u.unitClass)
+            {
+                case UnitClass.Sword:
+                    sword++;
+                    break;
+                case UnitClass.Shield:
+                    shield++;
+                    break;
+                default:
+                    lance++;
+                    break;
+            }
+        }
+
+        if (sword < shield || sword < lance) newUnit = UnitClass.Sword;
+        else if (shield < sword || shield < lance) newUnit = UnitClass.Shield;
+        else newUnit = UnitClass.Lance;
+
+        Unit other = null;
+        bool changed = false;
+
+        foreach (Unit u in prevRoleUnits)
+        {
+            if (u.unitClass == newUnit)
+            {
+                u.role = newRole;
+                changed = true;
+                break;
+            }
+            else other = u;
+        }
+
+        if (!changed) other.role = newRole;
     }
 }
 

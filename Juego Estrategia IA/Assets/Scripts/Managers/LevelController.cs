@@ -47,9 +47,15 @@ public class LevelController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < players.Length; i++)
+        players[0].InitPlayer(teamSets[0]);
+        players[0].type = PlayerType.User;
+
+        for (int i = 1; i < players.Length; i++)
+        {
             players[i].InitPlayer(teamSets[i]);
-        
+            players[i].type = PlayerType.NPC;
+        }
+               
         StartCoroutine(CoreLoop());
     }
 
@@ -91,7 +97,8 @@ public class LevelController : MonoBehaviour
     private IEnumerator PlayerTurn()
     {
         PlayerController player = players[currentPlayer];
-        _camera.SetCameraPosition(player.team.flagPosition.worldPosition);
+        _camera.SetCameraPosition(player.team.flagPosition.worldPosition);   
+        //_camera.SetCameraPosition(player.CameraInitialTurnPosition());   
         player.StartTurn();
 
         while (player.HasPlayerFinished() && !TestEndGameCondition())
