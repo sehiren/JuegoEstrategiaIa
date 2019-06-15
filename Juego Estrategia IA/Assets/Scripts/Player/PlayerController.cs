@@ -42,14 +42,14 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         turnButton = GameObject.Find("Button").GetComponent<Button>();
-        levelScript = GameObject.Find("GameManager").GetComponent<LevelController>();
+        levelScript = LevelController.instance;
         path = GameObject.Find("PathFindingManger").GetComponent<PathFinding>();
-        boostScript = GameObject.Find("UpgradeAreaManager").GetComponent<UpgradeAreaManager>();
+        boostScript = UpgradeAreaManager.instance;
+        _team = GetComponent<Team>();
     }
     
     public void InitPlayer(TeamSet tSet)
     {
-        _team = GetComponent<Team>();
         _team.InitTeam(tSet);
         
         _drawGrid = DrawGrid.instance;
@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
 
         _hoverTimer = 0;
 
-        flagEnemy = levelScript.players[0]._team.flagPosition;
+        flagEnemy = levelScript.GetEnemyFlag(_team);
         flagAlly = _team.flagPosition;
         totalDistance = path.GetDistance(flagAlly, flagEnemy);
     }

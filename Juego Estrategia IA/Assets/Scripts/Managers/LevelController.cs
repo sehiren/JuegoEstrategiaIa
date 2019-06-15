@@ -47,13 +47,9 @@ public class LevelController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        players[0].InitPlayer(teamSets[0]);
-        players[0].type = PlayerType.User;
-
-        for (int i = 1; i < players.Length; i++)
+        for (int i = 0; i < players.Length; i++)
         {
             players[i].InitPlayer(teamSets[i]);
-            players[i].type = PlayerType.NPC;
         }
                
         StartCoroutine(CoreLoop());
@@ -187,6 +183,20 @@ public class LevelController : MonoBehaviour
     public void ReiniciarJuego()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    /// <summary>
+    /// Devolver la bandera enemiga
+    /// </summary>
+    /// <param name="currentTeam">Equipo del que llama a la funcion</param>
+    /// <returns>Nodo de la bandera enemiga</returns>
+    public GridNode GetEnemyFlag(Team currentTeam)
+    {
+        foreach (PlayerController player in players)
+            if (player.team != currentTeam)
+                return player.team.flagPosition;
+
+        return null;
     }
 
     /// <summary>
